@@ -1,6 +1,6 @@
 class TicTacToe
 	 def initialize
-	 	@board = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
+	 	@board = ['0','1','2','3','4','5','6','7','8']
 	 	@player_1 = Player.new
 	 	@player_2 = Player.new
 	 	@players = [@player_1, @player_2]
@@ -24,8 +24,9 @@ class TicTacToe
 	 def win?(player)
 	 	@@winning_positions = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 	 	@@winning_positions.each do |set| 
-	 		return @game_over = set.all?{ |pos| @board[pos] == player.icon } ? true : false
+	 		return true if @game_over = set.all?{ |pos| @board[pos] == player.icon }
 	 	end
+	 	false
 	 end
 
 	 def play
