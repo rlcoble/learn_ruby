@@ -1,80 +1,64 @@
 module Enumerable
 	def my_each
-		for i in (0...self.to_a.length)
-			yield(self.to_a[i])
-		end
+		0.upto(self.to_a.length - 1) { |i| yield(self.to_a[i]) }
 	end
 
 	def my_each_with_index
-		for i in (0...self.to_a.length)
-			yield(self.to_a[i], i)
-		end
+		0.upto(self.to_a.length - 1) {|i| yield(self.to_a[i], i)}
 	end
 
 	def my_select()
 		result = []
-		self.my_each do |v|
-			if yield(v)
-				result.push(v)
-			end
-		end
-		return result
+		self.my_each { |v| result << v if yield(v) }
+		result
 	end
 
 	def my_all?()
-		if self==self.my_select{|v| yield(v)}
-			return true
-		else
-			return false
-		end
+		self == self.my_select { |v| yield(v) } ? true : false
 	end
 
 	def my_any?()
-		array = self.my_select{|v| yield(v)}
-		if array.empty?
-			return false
-		else
-			return true
-		end
+		array = self.my_select{ |v| yield(v) }
+		array.empty? ? false : true
 	end
 
 	def my_none?()
-		return !self.my_any?{|v| yield(v)}
+		!self.my_any?{ |v| yield(v) }
 	end
 
 	def my_count()
 		count = 0
-		array = self.my_select{|v| yield(v)}
-		array.my_each{|v| count+=1}
-		return count
+		array = self.my_select{ |v| yield(v) }
+		array.my_each{ |v| count += 1 }
+		count
 	end
 
 	def my_map(*p)
 		array = []
-		unless (p.length==1 && (p[0].is_a? Proc))
-			raise ArgumentError unless p.length==0
-			self.my_each{|v| array.push(yield(v))}
+		unless (p.length == 1 && (p[0].is_a? Proc))
+			raise ArgumentError unless p.length == 0
+			self.my_each{ |v| array << yield(v) }
 			return array
 		end
-		self.my_each{|v| array.push(p[0].call(v))}
-		return array
+		self.my_each{|v| array << p[0].call(v)}
+		array
 	end
 
 	def my_inject(*args)
 		value = 0
-		if(args.length==0)
-			self.my_each_with_index{|v,i| i==0 ? value=v : value = yield(value,v)}
-		elsif(args.length==1)
+		if(args.length == 0)
+			self.my_each_with_index{ |v,i| i == 0 ? value = v : value = yield(value,v) }
+		elsif(args.length == 1)
 			value = args[0]
-			self.my_each{|v| value = yield(value,v)}
+			self.my_each{ |v| value = yield(value,v) }
 		end
-		return value
+		value
 	end
 
 end
 
 def multiply_elys(array)
-		array.my_inject{|sum,v| sum*v}
+		array.my_inject{ |sum,v| sum * v }
 end
 
 #[1,3,4].my_each {|i| puts i}
