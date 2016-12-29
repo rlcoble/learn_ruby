@@ -58,6 +58,9 @@ class Hangman
 			end
 			@misses_left-=1 unless @result.include?("#{guess}")
 		end
+
+		puts @result.join==@secret_word ? "YOU WIN!" : "YOU LOSE!"
+
 	end
 end
 
